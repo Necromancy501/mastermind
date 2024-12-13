@@ -1,0 +1,2 @@
+peg graphics: https://opengameart.org/content/boardgame-pack
+selector graphics: https://freepngimg.com/png/24696-left-arrow
