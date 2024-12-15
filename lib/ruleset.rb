@@ -2,6 +2,8 @@
 
 class Ruleset
 
+  $win = false
+
   @@choice_arr = []
   @@z = 0
   @@i = 0
@@ -9,10 +11,18 @@ class Ruleset
   @@y = 0
 
   def self.choice
-    4.times do 
-      @@choice_arr.push(rand(1..6))
+    if $choice == 1
+      4.times do 
+        @@choice_arr.push(rand(1..6))
+      end
+      p @@choice_arr
+    else
+      4.times do
+        p 'Choose number: ' 
+        @@choice_arr.push(gets.chomp.to_i)
+      end
+      p @@choice_arr
     end
-    p @@choice_arr
   end
 
   def self.guess_submit
@@ -26,6 +36,7 @@ class Ruleset
 
   def self.win
     p "You win! :)"
+    $win = true
   end
 
   def self.guess_check
@@ -64,6 +75,11 @@ class Ruleset
       end
       @@y+=1
       @@x+=1
+
+      if @@y == 4
+        $feedback = [exact_matches.length, secret_matches.length]
+      end
     end
+    
   end
 end
