@@ -1,30 +1,16 @@
-class Bot
-
-  @demo = false
-
-  $feedback = [0, 0]
-
-  def initialize selector
-    @selector = selector
+class Mastermind
+  def initialize
     # Generate all possible codes (1 to 6 for each digit)
     @all_codes = generate_codes
-    @possible_codes = @all_codes.map(&:clone)
+    @possible_codes = @all_codes.dup
+    @guesses = []
     @initial_guess = [1, 1, 2, 2]
-    @guesses = [@initial_guess]
     @current_guess = @initial_guess
   end
 
+  # Generate all possible codes: 4 digits with each digit between 1 and 6
   def generate_codes
-    codes = (1111..6666).to_a.select { |code| code.to_s.chars.all? { |d| d.to_i.between?(1, 6) } }
-    codes = codes.reduce(Array.new) do |array, code|
-      array_code = []
-      code.to_s.each_char do |peg|
-        array_code.push(peg.to_i)
-      end
-      array.push(array_code)
-      array
-    end
-    codes
+    (1111..6666).to_a.select { |code| code.to_s.chars.all? { |d| d.to_i.between?(1, 6) } }
   end
 
   # Get the feedback (black and white pegs)
@@ -33,8 +19,8 @@ class Bot
     guess = guess.map(&:to_i)
     black_pegs = 0
     white_pegs = 0
-    secret_copy = secret.map(&:clone)
-    guess_copy = guess.map(&:clone)
+    secret_copy = secret.dup
+    guess_copy = guess.dup
 
     # First pass: check for exact matches (black pegs)
     guess_copy.each_with_index do |g, i|
@@ -97,15 +83,16 @@ class Bot
     best_guess
   end
 
+  # Play the game: start with the initial guess and iterate
   def play_game(secret)
     feedback = [0, 0] # No feedback yet
     while feedback != [4, 0]
       # Make a guess
-      puts "Guess: #{@current_guess}"
+      puts "Guess: #{@current_guess.join}"
       
       # Get the feedback from the secret
       feedback = get_feedback(@current_guess, secret)
-      puts "Feedback: #{feedback}"
+      puts "Feedback: #{feedback.join(' peg(s)')}"
       
       # If we win (4 black pegs), exit the loop
       break if feedback == [4, 0]
@@ -115,25 +102,13 @@ class Bot
       
       # Choose the next guess using minimax strategy
       @current_guess = minimax_guess
-      @guesses.push @current_guess
     end
     puts "You won the game in #{@guesses.size} guesses!"
   end
-
-  def play_guess
-
-    unless @demo
-      @guesses.each do |guess|
-        guess.each do |peg|
-          until @selector.current == peg
-            @selector.move_right
-          end
-          @selector.select_peg
-        end
-      end
-      @demo = true
-    end
-  end
-
-
 end
+
+# To play the game:
+secret_code = [1, 4, 2, 3]  # Example secret code
+game = Mastermind.new
+game.play_game(secret_code)
+

@@ -22,6 +22,7 @@ class Ruleset
         @@choice_arr.push(gets.chomp.to_i)
       end
       p @@choice_arr
+      $bot.play_game @@choice_arr
     end
   end
 
@@ -40,12 +41,13 @@ class Ruleset
   end
 
   def self.guess_check
+    $bot.play_guess if $choice == 0
     flag_counter = @@z
     exact_matches = []
     secret_matches = []
     win_counter = 0
     quit_counter = 1
-    choice_copy = b = @@choice_arr.map(&:clone)
+    choice_copy = @@choice_arr.map(&:clone)
 
     while @@z < Board.status[:pegs_placed]
         if $guess_array[@@i] == @@choice_arr[@@i]

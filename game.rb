@@ -17,18 +17,13 @@ class Mastermind < Gosu::Window
   def initialize
     super WIDTH, HEIGHT
     self.caption = TITLE
-    Ruleset.choice
     @objects = {window: self}
     @objects[:board] = Board.new(WIDTH, HEIGHT)
     @objects[:selector] = Selector.new(WIDTH, HEIGHT)
-    Peg.bottom_pegs(WIDTH, HEIGHT)
     @objects[:flag] = Flag.new
-    @objects[:bot] = Bot.new
-    
-
-    if $choice == 0
-      
-    end
+    $bot = Bot.new(@objects[:selector])
+    Peg.bottom_pegs(WIDTH, HEIGHT)
+    Ruleset.choice
   end
 
   def draw

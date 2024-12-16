@@ -30,6 +30,10 @@ class Selector
     end
   end
 
+  def current
+    @i
+  end
+
   def select_peg
     current_peg = "sprite/peg/0#{@i}.png"
     peg_obj = DrawablePeg.new current_peg
